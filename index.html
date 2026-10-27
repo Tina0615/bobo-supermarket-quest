@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4e8c7" />
+    <title>Bobo 超市探險隊｜量詞購物任務</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "phaser": "./assets/vendor/phaser/phaser.esm.min.js"
+        }
+      }
+    </script>
+    <script type="module" src="./src/main.js"></script>
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="game-header">
+        <div class="brand-lockup">
+          <img class="brand-bobo" src="assets/images/characters/bobo-pixel-concept.png" alt="" />
+          <div>
+            <p class="eyebrow">BOBO'S SUPERMARKET QUEST</p>
+            <h1>Bobo 超市探險隊</h1>
+            <p class="brand-subtitle">量詞購物任務</p>
+          </div>
+        </div>
+        <div class="header-status">
+          <div class="star-chip" aria-label="完成後依答題正確度取得星星">
+            <span aria-hidden="true">✦</span>
+            <span>任務星等</span>
+            <strong id="star-preview">☆☆☆</strong>
+          </div>
+          <button class="restart-button" id="restart-button" type="button">重新開始</button>
+        </div>
+      </header>
+
+      <section class="progress-card" aria-label="任務進度">
+        <div class="progress-copy">
+          <span class="progress-title" id="round-label">採買任務</span>
+          <span id="progress-label">第 1 題 / 5</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="購物任務進度" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0">
+          <span id="progress-fill"></span>
+        </div>
+      </section>
+
+      <div class="game-layout">
+        <section class="store-column" aria-label="超市與購物清單">
+          <section class="scene-card">
+            <div class="scene-heading">
+              <span class="scene-location">BOBO MARKET</span>
+              <span class="role-badge" id="role-label">你扮演：採買者</span>
+            </div>
+            <div id="phaser-stage" class="phaser-stage" aria-label="Bobo 所在的像素超市場景"></div>
+          </section>
+
+          <section class="shopping-list-card">
+            <div class="list-heading">
+              <div>
+                <p class="eyebrow">TODAY'S SHOPPING LIST</p>
+                <h2>今天要買的東西</h2>
+              </div>
+              <span class="list-count">4 項</span>
+            </div>
+            <ul class="shopping-list" id="shopping-list">
+              <li class="list-item" data-list-item="water">
+                <img src="assets/images/items/pixel/water-bottle.png" alt="" />
+                <span class="list-quantity">2 bottles</span>
+                <span class="list-name">of water</span>
+                <span class="list-check" aria-hidden="true">✓</span>
+              </li>
+              <li class="list-item" data-list-item="apple">
+                <img src="assets/kenney/food-kit/pixel/apple.png" alt="" />
+                <span class="list-quantity">3</span>
+                <span class="list-name">apples</span>
+                <span class="list-check" aria-hidden="true">✓</span>
+              </li>
+              <li class="list-item" data-list-item="tea">
+                <img src="assets/kenney/food-kit/pixel/cup-tea.png" alt="" />
+                <span class="list-quantity">1 cup</span>
+                <span class="list-name">of tea</span>
+                <span class="list-check" aria-hidden="true">✓</span>
+              </li>
+              <li class="list-item" data-list-item="orange">
+                <img src="assets/kenney/food-kit/pixel/orange.png" alt="" />
+                <span class="list-quantity">3 boxes</span>
+                <span class="list-name">of oranges</span>
+                <span class="list-check" aria-hidden="true">✓</span>
+              </li>
+            </ul>
+          </section>
+        </section>
+
+        <section class="conversation-card" aria-label="購物對話任務">
+          <div id="question-panel">
+            <div class="conversation-heading">
+              <div>
+                <p class="eyebrow">YOUR TURN TO TALK</p>
+                <h2>完成這段購物對話</h2>
+              </div>
+              <span class="mode-badge" id="difficulty-label">選擇</span>
+            </div>
+
+            <article class="dialog-card">
+              <div class="dialog-speaker">
+                <span class="speaker-tag" id="speaker-label">店員</span>
+                <span class="dialog-caption">對話情境</span>
+              </div>
+              <div class="dialog-content">
+                <img class="product-image" id="product-image" src="assets/kenney/food-kit/pixel/apple.png" alt="蘋果" />
+                <div class="dialog-copy">
+                  <p class="prompt-language">ENGLISH</p>
+                  <p class="prompt-english" id="prompt-english">How many apples do you want?</p>
+                  <p class="task-chinese" id="task-chinese">選出最自然的回答。</p>
+                </div>
+              </div>
+            </article>
+
+            <form class="answer-card" id="answer-form">
+              <div class="answer-heading">
+                <div>
+                  <p class="eyebrow">YOUR RESPONSE</p>
+                  <h3 id="answer-title">換你回答</h3>
+                </div>
+                <span class="answer-mode" id="answer-mode-label">選擇答案</span>
+              </div>
+
+              <div id="answer-area" class="answer-area"></div>
+
+              <div class="hint-box" id="hint-box" hidden>
+                <span class="hint-icon" aria-hidden="true">?</span>
+                <p id="hint-text"></p>
+              </div>
+
+              <div class="feedback-box" id="feedback-box" role="status" aria-live="polite" hidden>
+                <strong id="feedback-title"></strong>
+                <p id="feedback-detail"></p>
+                <p class="partner-response" id="partner-response" hidden></p>
+              </div>
+
+              <div class="answer-actions">
+                <button class="hint-button" id="hint-button" type="button">需要提示？</button>
+                <button class="submit-button" id="submit-button" type="submit">確認回答 <span aria-hidden="true">→</span></button>
+              </div>
+              <p class="gentle-reminder">沒有倒數或答錯扣分；看懂線索後再試一次就好。</p>
+            </form>
+          </div>
+
+          <section class="completion-card" id="completion-panel" aria-live="polite" hidden>
+            <div class="completion-icon" aria-hidden="true">★</div>
+            <p class="eyebrow">SHOPPING COMPLETE</p>
+            <h2>清單完成！</h2>
+            <p>你在超市裡輪流當採買者和店員，完成了蘋果、橘子、水和茶的購物對話。</p>
+            <div class="completion-stats">
+              <div><strong id="result-first-try">0 / 5</strong><span>第一次答對</span></div>
+              <div><strong id="result-hints">0</strong><span>使用提示</span></div>
+            </div>
+            <div class="earned-stars" id="earned-stars" aria-label="本輪星等">★☆☆</div>
+            <button class="submit-button replay-button" id="replay-button" type="button">再完成一次購物任務 <span aria-hidden="true">↻</span></button>
+          </section>
+        </section>
+      </div>
+
+      <footer class="game-footer">
+        <span>問數量、組句、完成採買。</span>
+        <span>LEARN BY SHOPPING <b aria-hidden="true">✦</b></span>
+      </footer>
+    </main>
+  </body>
+</html>

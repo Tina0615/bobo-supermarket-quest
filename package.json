@@ -1,0 +1,11 @@
+{
+	"name": "bobo-english-adventure",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"dev": "node .previewserver.cjs"
+	},
+	"dependencies": {
+		"phaser": "4.2.1"
+	}
+}
